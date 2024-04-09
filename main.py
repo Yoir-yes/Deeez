@@ -30,6 +30,10 @@ class MyForm(QDialog):
         if type == 'Pin':
             for i in range(int(length)):
                 pasword += str(random.randint(0,9))
+        elif self.ui.word.isChecked():
+            words = self.readDict('odm.txt')
+            while len(pasword) < int(length):
+                pasword += random.choice(words)
         else:
             elements = [self.smallChars]
             if self.ui.specialChar.isChecked():
@@ -55,8 +59,20 @@ class MyForm(QDialog):
                         new_pasword += pasword[i]
                 pasword = new_pasword
 
-
         self.ui.genertedPassword.setText(pasword)
+
+
+    def readDict(self, path):
+        words = []
+        with open(path, 'r', encoding='utf-8') as file:
+            lines = file.readlines()
+            for line in lines:
+                line = line.split(',')[0]
+                line = line.replace('\n','')
+                if len(line) > 2 and line.find(' ') == -1:
+                    words.append(line)
+        return words
+
 
     def easterClicked(self):
         if self.ui.easter.isChecked():
@@ -73,6 +89,7 @@ class MyForm(QDialog):
             self.ui.capitalChars.setDisabled(False)
             self.ui.specialChar.setDisabled(False)
             self.ui.word.setDisabled(False)
+
 
 
 
