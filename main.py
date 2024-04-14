@@ -15,11 +15,11 @@ class MyForm(QDialog):
         self.ui.setupUi(self)
         self.ui.generate.clicked.connect(self.generate)
         self.ui.easter.clicked.connect(self.easterClicked)
+        self.ui.password.textChanged.connect(self.checkStrongPassword)
 
-        #zasobnik znakow
         self.smallChars = [l for l in string.ascii_lowercase]
         self.capitalChars = [l for l in string.ascii_uppercase]
-        self.numbers = [str(i) for i in range(0,10)]
+        self.numbers = [str(i) for i in range(0, 10)]
         self.specialChars = [l for l in string.punctuation]
 
 
@@ -72,6 +72,30 @@ class MyForm(QDialog):
                 if len(line) > 2 and line.find(' ') == -1:
                     words.append(line)
         return words
+
+    def checkStrongPassword(self):
+        password = self.ui.password.text()
+        score = 0
+
+        length = len(password)
+        if length >= 8:
+            score += 20
+        elif length >= 6:
+            score += 10
+
+        if any(char.isupper() for char in password):
+            score += 20
+
+        if any(char.islower() for char in password):
+            score += 20
+
+        if any(char.isdigit() for char in password):
+            score += 20
+
+        if any(char in string.punctuation for char in password):
+            score += 20
+
+        self.ui.passwordPower.setValue(score)
 
 
     def easterClicked(self):
